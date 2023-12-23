@@ -26,7 +26,7 @@ export const DataDisplay = () => {
 
                    <div className="w-[32%] max-sm:w-full max-sm:flex max-sm:justify-center max-sm:w-full sm:truncate font-semibold">{data.longUrl}</div>
 
-                   <a href={`http://localhost:5000/${data.shortUrl}`} target="_blank" className="font-semibold text-violet-700">urlsnap.vercel.app/{data.shortUrl}</a>
+                   <a href={`https://u-s-9rav.onrender.com/${data.shortUrl}`} target="_blank" className="font-semibold text-violet-700">https://u-s-9rav.onrender.com/{data.shortUrl}</a>
     
                     <DataDisplayBtn url_id={data._id} clicks={data.clicks} urlToCopy={data.shortUrl} />
 

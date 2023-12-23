@@ -70,7 +70,7 @@ export const DataDisplayBtn = ( { url_id, clicks, urlToCopy } : any) => {
 
 
     const copyToClipboard = async () => {
-        await navigator.clipboard.writeText(`localhost:5000/${urlToCopy}`);
+        await navigator.clipboard.writeText(`https://u-s-9rav.onrender.com/${urlToCopy}`);
     }
 
 

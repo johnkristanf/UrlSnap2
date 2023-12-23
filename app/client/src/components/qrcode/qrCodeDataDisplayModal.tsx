@@ -51,9 +51,9 @@ export const QrCodeDataDisplayModal = ({ qrCodeData, setopenQrModal }: any) => {
                     <div className="flex flex-col">
                         <label className="font-bold text-slate-700 text-2xl"> Short URL:</label>
 
-                        <a href={`http://localhost:5000/qr/${qrCodeData.qrCodeShortURL}`} target="_blank" 
+                        <a href={`https://u-s-9rav.onrender.com/qr/${qrCodeData.qrCodeShortURL}`} target="_blank" 
                             className="font-bold text-xl text-violet-700">
-                            http://localhost:5000/qr/{qrCodeData.qrCodeShortURL}
+                            https://u-s-9rav.onrender.com/qr/{qrCodeData.qrCodeShortURL}
                         </a>
 
                     </div>
