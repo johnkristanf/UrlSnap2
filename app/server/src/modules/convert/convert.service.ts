@@ -30,7 +30,7 @@ export class ConvertService {
 
             const audioStream = ytdl.downloadFromInfo(videoInfo, { format: audioFormat });
 
-            const filePath = `downloads/${videoInfo.videoDetails.title}.mp3`;
+            const filePath = `/opt/render/project/app/server/src/modules/convert/downloads/${videoInfo.videoDetails.title}.mp3`;
 
 
 
