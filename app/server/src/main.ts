@@ -19,7 +19,7 @@ async function bootstrap() {
     
   });
 
-  const path = process.env.NODE_ENV === 'production' ? '../.env' : '';
+  const path = process.env.NODE_ENV === 'production' ? '../../.env.production' : '../.env';
     
   dotenv.config({ path: path });
 
