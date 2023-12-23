@@ -6,7 +6,7 @@ export const downloadAudio = async (audioFilePath: string) => {
 
     try {
 
-    const response =  await axios.get(`http://localhost:5000/convert/${encodeURIComponent(audioFilePath)}`, {
+    const response =  await axios.get(`https://u-s-9rav.onrender.com/convert/${encodeURIComponent(audioFilePath)}`, {
         responseType: 'arraybuffer'
     });
 

@@ -6,7 +6,7 @@ export const fetchCustomizableQrCode = async (backgroundColor: string, foregroun
 
     try {
 
-      const response = await axios.get(`http://localhost:5000/customizable/${encodeURIComponent(backgroundColor)}/${encodeURIComponent(foregroundColor)}`, {
+      const response = await axios.get(`https://u-s-9rav.onrender.com/customizable/${encodeURIComponent(backgroundColor)}/${encodeURIComponent(foregroundColor)}`, {
         responseType: 'arraybuffer'
         
       });

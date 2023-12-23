@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export const fetchShortUrl = () => {
-    return axios.get('http://localhost:5000');
+    return axios.get('https://u-s-9rav.onrender.com');
 }

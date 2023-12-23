@@ -9,7 +9,7 @@ export const createShortUrl = async (urldata: ShortURLFormInputTypes) => {
         urldata['shortUrl'] = '';
         urldata['clicks'] = 0;
 
-        return axios.post('http://localhost:5000/url', urldata);
+        return axios.post('https://u-s-9rav.onrender.com/url', urldata);
 
     } catch (error) {
         console.error(error)

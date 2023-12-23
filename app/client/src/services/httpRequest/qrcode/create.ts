@@ -6,7 +6,7 @@ export const createQrCode = async (qrCodeData: qrCodeFormTypes) => {
 
     try {
 
-        return axios.post('http://localhost:5000', qrCodeData);
+        return axios.post('https://u-s-9rav.onrender.com', qrCodeData);
 
     } catch (error) {
         console.error(error)

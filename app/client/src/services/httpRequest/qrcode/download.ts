@@ -6,7 +6,7 @@ export const downloadQrCode = async (format: string, qrcode_id: string) => {
 
     try {
 
-      const response = await axios.get(`http://localhost:5000/download/qrcode/${encodeURIComponent(format)}/${encodeURIComponent(qrcode_id)}`, {
+      const response = await axios.get(`https://u-s-9rav.onrender.com/download/qrcode/${encodeURIComponent(format)}/${encodeURIComponent(qrcode_id)}`, {
         responseType: 'arraybuffer'
         
       });
