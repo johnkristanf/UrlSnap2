@@ -14,9 +14,16 @@ export class ShortURL extends Document {
 
   @Prop()
   clicks: number;
+
 }
 
 export const ShortURLSchema = SchemaFactory.createForClass(ShortURL);
+
+ShortURLSchema.index({
+  longUrl: 1,
+  shortUrl: 1,
+  clicks: 1,
+})
 
 
 

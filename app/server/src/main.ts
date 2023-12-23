@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 
 import * as dotenv from 'dotenv';
 
-console.log('mongo uri', process.env.MONGODB_LOCAL_URI)
 
 async function bootstrap() {
   

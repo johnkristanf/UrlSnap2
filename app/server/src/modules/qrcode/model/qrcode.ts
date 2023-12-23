@@ -28,5 +28,10 @@ export class QrCode extends Document {
 export const QrCodeSchema = SchemaFactory.createForClass(QrCode);
 
 
+QrCodeSchema.index({
+  qrCodeLongURL: 1,
+  qrCodeShortURL: 1,
+  qrCode: 1
+})
 
 
