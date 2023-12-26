@@ -4,13 +4,10 @@
     "build": "turbo run build",
     "start": "set NODE_ENV=production && node app/server/dist/main"
   },
-
   "dependencies": {
     "turbo": "^1.11.1"
   },
-
   "workspaces": [
     "app/*"
   ]
-
 }
