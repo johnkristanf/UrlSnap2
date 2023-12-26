@@ -10,6 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 
+
 @Module({
   imports: [
     UrlModule, 
@@ -29,7 +30,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
 
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_LOCAL_URI')
+        uri: configService.get<string>('MONGODB_URI')
       }),
 
       inject: [ConfigService]
