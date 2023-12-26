@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Res } from '@nestjs/common';
 import { QrcodeService } from './qrcode.service';
 import { CreateQrcodeDto } from './dto/create-qrcode.dto';
 
@@ -16,7 +16,6 @@ export class QrcodeController {
 
 
   @Get('customizable/:backgroundColor/:foregroundColor')
-
   fetchCustomizableQrCode(
     @Param('backgroundColor') qrcode_bgcolor: string,
     @Param('foregroundColor') qrcode_foregroundcolor: string,
@@ -53,22 +52,6 @@ export class QrcodeController {
     return this.qrcodeService.downloadQrCode(format, qrcode_id, res);
   }
 
-
-  @Post('fb/post')
-  
-  async postURLToFacebook(@Body() data: { url: string }): Promise<void> {
-   
-    try {
-
-      const { url } = data;
-     
-      await this.qrcodeService.postURLToFacebook(url);
-      
-    } catch (error) {
-      console.error('Error posting URL to Facebook:', error.message);
-      throw error;
-    }
-  }
 
   
   @Delete(':qrCode_id')

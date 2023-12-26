@@ -6,7 +6,6 @@ import { CreateQrcodeDto } from './dto/create-qrcode.dto';
 import  { QrCodeWithTypes, QrCodeContentType, 
          QrCodeFormat, 
          QrCodeResolution, 
-         fetchAllQrCodeTypes
 
         } from 'src/utils/types/qrcode';
 
@@ -21,7 +20,6 @@ import { Model } from 'mongoose';
 import { QrCode } from './model/qrcode';
 import { HttpService } from '@nestjs/axios';
 
-import { lastValueFrom } from 'rxjs';
 import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
@@ -31,8 +29,7 @@ export class QrcodeService {
 
   constructor(
     @InjectModel(QrCode.name) private readonly qrcodeModel: Model<QrCode>,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-    private readonly httpService: HttpService){}
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache){}
 
 
   async generateDownloadableQrCode(createQrcodeDto: CreateQrcodeDto) {
@@ -86,7 +83,6 @@ export class QrcodeService {
   }
 
 
-  @UseInterceptors(CacheInterceptor)
   async generateQrCode(qrCodeData: CreateQrcodeDto): Promise<string> {
 
     try {
@@ -205,7 +201,6 @@ export class QrcodeService {
 
 
  
-  @UseInterceptors(CacheInterceptor)
   async generateQrCodeWithTypes(format: string, qrCodeData: QrCodeWithTypes): Promise<string> {
 
     try {
@@ -234,37 +229,7 @@ export class QrcodeService {
   }  
 
 
-  async postURLToFacebook(url: string): Promise<void> {
 
-    console.log('url adata', url)
-    const accessToken = 'EAAFrUn05IVMBOZCV9z5t391rvzL037LgyJrQ3XVo6F8WW9DvZAZBeNF2hi9ijEd9IJQquxihVzJGqF2kLRmYsCXnm67KFl3ZB8QVVd22FYBXLtAd5mZAkE2JGa5be8WE4VVFdtaLoS60sHPuIT5PBuGrPL67ZAt34SCuUQpO0N34vIGQbgYVUA2TZAh'; 
-
-    try {
-      
-      const response = this.httpService.post(
-        `https://graph.facebook.com/2756790041153946/posts`,
-        {
-          message: 'Check out this URL:',
-          link: url,
-          access_token: accessToken,
-        },
-
-      );
-
-      const result = await lastValueFrom(response);
-
-      if (result.status === 200) {
-        console.log('URL posted to Facebook successfully!');
-      } else {
-        throw new Error('Failed to post URL to Facebook');
-      }
-    } catch (error) {
-      console.error('Error posting URL to Facebook:', error.response?.data || error.message);
-      throw error;
-    }
-  }
-
-  
 
   async remove(qrCode_id: string) {
 
