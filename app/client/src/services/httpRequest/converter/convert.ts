@@ -6,7 +6,11 @@ export const convertYtURL = async (ytURL: converterFormTypes) => {
 
     try {
         
-        const response = await axios.post('https://u-s-9rav.onrender.com/convert', ytURL);
+        const response = await axios.post('https://u-s-9rav.onrender.com/convert', ytURL, {
+            responseType: 'arraybuffer'
+        });
+
+
         return response.data;
 
 
