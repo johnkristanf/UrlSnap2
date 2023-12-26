@@ -1,6 +1,5 @@
 import { ConverterInput } from "../ui/inputs";
 import { ConvertYTMP3Btn } from "../ui/button";
-import { DownloadAudio } from "./downloadAudio";
 
 import { converterFormTypes } from "../../utils/types/converter";
 import { isError, isLoading } from "../../services/validator/inputs";
@@ -8,22 +7,30 @@ import { isError, isLoading } from "../../services/validator/inputs";
 import { convertYtURL } from "../../services/httpRequest/converter/convert";
 
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import React ,{ useState } from "react";
 
 import { useMutation, useQueryClient } from "react-query";
+
+const DownloadAudio = React.lazy(() => import('./downloadAudio'))
 
 
 export const ConverterForm = () => {
 
     const [Submitting, setSubmitting] = useState(false);
-    const [audioFilePath, setaudioFilePath] = useState();
+    const [convertedAudio, setconvertedAudio] = useState();
+
+    const [YTurl, setYTurl] = useState<string>('');
+    
 
     const queryClient = useQueryClient();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<converterFormTypes>();
 
+
     const mutation = useMutation(
+        
         async (converterData: converterFormTypes) => {
+            setYTurl(converterData.youtubeURL)
             return await convertYtURL(converterData)
       
         },
@@ -40,15 +47,17 @@ export const ConverterForm = () => {
         setSubmitting(true);
 
         const result = await mutation.mutateAsync(converterData);
-        setaudioFilePath(result);
+
+        setconvertedAudio(result);
 
         reset();
 
         setSubmitting(false);
     }
 
-    if(audioFilePath){
-        return <DownloadAudio setaudioFilePath={setaudioFilePath} audioFilePath={audioFilePath} />
+    
+    if(convertedAudio){
+        return <DownloadAudio YTurl={YTurl} setconvertedAudio={setconvertedAudio} convertedAudio={convertedAudio} />
     } 
     
 
