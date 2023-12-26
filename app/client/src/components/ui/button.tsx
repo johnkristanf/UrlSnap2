@@ -8,7 +8,6 @@ import { deleteQrCode } from "../../services/httpRequest/qrcode/delete";
 import { downloadQrCode } from "../../services/httpRequest/qrcode/download";
 
 import { downloadAudio } from "../../services/httpRequest/converter/download";
-import { convertNextYtURL } from "../../services/httpRequest/converter/convertNext";
 
 import Swal from 'sweetalert2';
 
@@ -240,13 +239,13 @@ export const ConvertYTMP3Btn = ({ Submitting }: any) => {
 }
 
 
-export const DownloadAudioBtn = ({ audioFilePath }: any) => {
+export const DownloadAudioBtn = ({ mp3Title, convertedAudio }: any) => {
 
     return(
 
         <button 
             type="submit"
-            onClick={() => downloadAudio(audioFilePath)}
+            onClick={() => downloadAudio(mp3Title, convertedAudio)}
             className="w-[40%] bg-black p-2 rounded-md text-white font-bold text-xl hover:opacity-75">
                Download
         </button>
@@ -254,18 +253,14 @@ export const DownloadAudioBtn = ({ audioFilePath }: any) => {
 }
 
 
-export const ConvertNextBtn = ({ setaudioFilePath, audioFilePath }: any) => {
-
-    const convertNext = () => {
-        setaudioFilePath()
-        convertNextYtURL(audioFilePath);
-    }
+export const ConvertNextBtn = ({ setconvertedAudio }: any) => {
+    
 
     return(
 
         <button 
             type="submit"
-            onClick={() => convertNext()}
+            onClick={() => setconvertedAudio()}
             className="w-[50%] bg-black p-2 rounded-md text-white font-bold text-xl hover:opacity-75">
                Convert Next
         </button>
