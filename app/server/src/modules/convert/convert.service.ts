@@ -1,19 +1,111 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger, Inject } from '@nestjs/common';
 
 import * as ytdl from 'ytdl-core';
-import * as ffmpeg from 'fluent-ffmpeg';
-import * as fs from 'fs';
+
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+
+import { Cache } from 'cache-manager';
 
 
 import { Response } from 'express';
+import { Readable } from 'stream';
 
 
 
 
 @Injectable()
 export class ConvertService {
+
+    constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache){}
+
+    private readonly logger = new Logger(ConvertService.name);
+
+    private setAudioDownloadHeader(res: Response){
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Cache-Control', 'public, max-age=604800000');
+        res.setHeader('Content-Disposition', `attachment; filename="audio.mp3"`);
+    }
     
-    async convert(ytUrl: string): Promise<string>{
+    
+    
+    async convert(ytUrl: string, res: Response): Promise<void> {
+
+        try {
+
+            const ytUrl_id = ytUrl.split('=')[1];
+
+            const cacheKey = `video_${ytUrl_id}`;
+
+            const cacheBufferExist = await this.cacheManager.get<Buffer>(cacheKey);
+
+
+            if(cacheBufferExist){
+                await this.passExistingCachedStream(cacheBufferExist, res);
+                return;
+            }
+
+
+            const audioStream = await this.convertURLtoAudioStream(ytUrl);
+
+               this.passNewlyCachedStream(audioStream, res);
+
+               this.setStreamCache(audioStream, cacheKey);
+              
+
+
+        } catch (error) {
+            this.logger.error(error);
+            throw new HttpException('ERROR Converting YT URL to MP3', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    setStreamCache(audioStream: Readable, cacheKey: string) {
+
+        const chunks: Buffer[] = [];
+
+        audioStream.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
+  
+        audioStream.on('end', async () => {
+          const concatenatedChunks = Buffer.concat(chunks);
+          await this.cacheManager.set(cacheKey, concatenatedChunks, 3600); 
+
+        });
+    }
+
+
+    async passExistingCachedStream(cacheBuffer: Buffer, res: Response) {
+
+
+        if(cacheBuffer){
+
+            this.setAudioDownloadHeader(res);
+
+            const stream = new Readable();
+            stream.push(cacheBuffer);
+            stream.push(null); 
+
+            stream.pipe(res);
+
+            return true;
+        }
+
+    }
+
+
+    passNewlyCachedStream(audioStream: Readable, res: Response) {
+
+        this.setAudioDownloadHeader(res);
+
+        audioStream.pipe(res);
+
+    }
+
+
+    async convertURLtoAudioStream(ytUrl: string): Promise<Readable> {
 
         try {
 
@@ -23,69 +115,39 @@ export class ConvertService {
                 quality: 'highestaudio'
             });
 
-
-            if (!audioFormat){
+            if (!audioFormat) {
                 throw new HttpException('ERROR Audio format not found', HttpStatus.NOT_FOUND);
-            } 
-
-            const audioStream = ytdl.downloadFromInfo(videoInfo, { format: audioFormat });
-
-            const filePath = `./downloads/${videoInfo.videoDetails.title}.mp3`;
+            }
 
 
-
-            await new Promise((resolve, reject) => {
-                ffmpeg(audioStream)
-                .audioBitrate(128)
-                .save(filePath)
-                .on('end', () => resolve(filePath))
-                .on('error', (err) => reject(err));
-            });
-
-
-            return filePath;
-              
+            return ytdl.downloadFromInfo(videoInfo, { format: audioFormat });
 
             
         } catch (error) {
-            console.error(error)
-            throw new HttpException('ERROR Converting YT URL to MP3', HttpStatus.INTERNAL_SERVER_ERROR)
+            this.logger.error(error);
+            throw new HttpException('ERROR CONVERTING URL TO STREAM', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
     }
 
 
-    async download(filePath: string, res: Response){
 
-        const splitPath = filePath.split('/');
+    async mp3Title(ytUrl: string): Promise<string> {
 
-        const audioTittle = splitPath[splitPath.length -1 ];
+      try {
 
-        this.setAudioHeader(audioTittle, res)
-       
-        this.sendFileStreamToRequest(filePath, res)
-       
-    }
+        const data = await ytdl.getInfo(ytUrl);
 
-    
-    sendFileStreamToRequest(filePath: string, res: Response){
+        const { title } = data.videoDetails;
 
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
+        return title || 'No Tittle Found';
 
-        fileStream.on('close', () => {
-            fs.unlinkSync(filePath);
-        });
-    }
+      } catch (error) {
+        this.logger.error('Error:', error);
+      }
+
+    } 
+      
 
 
-    setAudioHeader(audioTittle: string, res: Response){
-        res.setHeader('Content-Type', 'audio/mpeg');
-        res.setHeader('Content-Disposition', `attachment; filename="${audioTittle}"`);
-    }
-
-
-    next(filePath: string){
-        fs.unlinkSync(filePath);
-    }
+   
 }
