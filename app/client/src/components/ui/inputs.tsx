@@ -1,4 +1,4 @@
-import { urlPattern, YTurlPattern } from "../../utils/patterns";
+import { urlPattern } from "../../utils/patterns";
 import { fetchCustomizableQrCode } from "../../services/httpRequest/qrcode/fetchCustomizableQr";
 
 import { useEffect, useState } from 'react';
@@ -168,7 +168,7 @@ export const ConverterInput = ({ register }: any) => {
     <input 
     type="text" 
 
-    {...register("youtubeURL", { pattern: YTurlPattern, required: true })} 
+    {...register("youtubeURL", { required: true })} 
     className="w-full p-5 rounded-md bg-black placeholder:font-bold focus:outline-none text-white"
 
     placeholder="https://www.youtube.com/watch?v=x1iXA041zM4"
